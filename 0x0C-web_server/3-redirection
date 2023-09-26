@@ -1,31 +1,13 @@
 #!/usr/bin/env bash
 # install nginx and adjust the default homepage
 # add redirection
+
+
 apt-get -y update
 apt-get -y install nginx
 ufw allow 'Nginx HTTP'
-echo Hello World! > /var/www/html/index.nginx-debian.html
+echo 'Hello World!' > /var/www/html/index.html
+new_str="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.youtube.com\/watch?v=QH2-TGUlwu4 permanent;"
+sed -i "s/server_name _;/$new_str/" /etc/nginx/sites-available/default
+service nginx restart
 
-# Create a custom configuration file for redirection
-echo "server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    location / {
-        root /var/www/html;
-        index index.nginx-debian.html;
-    }
-
-    location /redirect_me {
-        return 301 https://twitter.com/medsalhaoui;
-    }
-}" > /etc/nginx/sites-available/redirect.conf
-
-# Create a symbolic link to enable the new configuration
-ln -s /etc/nginx/sites-available/redirect.conf /etc/nginx/sites-enabled/
-
-# Remove the default configuration to avoid conflicts
-rm /etc/nginx/sites-enabled/default
-
-# Reload nginx configuration
-service nginx reload
