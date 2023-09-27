@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 #  A Script that configures a new Ubuntu machine to Perform a 301-redirection
 
-# Upadating Packages before Installations
 sudo apt-get update
-sudo apt-get install -y nginx
+sudo apt-get -y install nginx
+sudo ufw allow 'Nginx HTTP'
 
-# Creating an index.html page
-echo "Hello World!" | sudo tee /var/www/html/index.html
+echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html
 
 # Performing a 301 Redirection
 string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/Med-Slh permanent;"
